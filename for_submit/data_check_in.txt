@@ -1,0 +1,54 @@
+Ilan Valencius, Cole Gvozdas, William Gibbons.
+
+Our data is hosted on grand-challenge and has been downloaded: https://covid-segmentation.grand-challenge.org/
+
+The contents of the README for the data is shown below:
+# COVID-19-20 Challenge
+
+## Data
+
+**Training and Validation:** Unenhanced chest CTs from 200 and 50 patients, 
+respectively, with positive RT-PCR for SARS-CoV-2 and ground truth 
+annotations of COVID-19 lesions in the lung.
+
+**Testing:** Additional, unseen 46 patients with positive RT-PCR for SARS-CoV-2 
+and ground truth annotations of COVID-19 lesions in the lung CT. The test 
+cases are from a variety of sources, included sources not used for training 
+and validation.
+
+**CT data** provided by The Multi-national NIH Consortium for CT AI in COVID-19 
+via the NCI TCIA public website. Users of the CT data must abide by the Creative 
+Commons Attribution 4.0 International License under which it has been published. 
+Attribution should include references to the following citations.
+
+**CT Data Citation**
+An P, Xu S, Harmon SA, Turkbey EB, Sanford TH, Amalou A, Kassin M, Varble N, 
+Blain M, Anderson V, Patella F, Carrafiello G, Turkbey BT, Wood BJ (2020). 
+CT Images in Covid-19 [Data set]. The Cancer Imaging Archive. DOI: 
+https://doi.org/10.7937/tcia.2020.gqry-nc81
+
+**TCIA Citation**
+Clark K, Vendt B, Smith K, Freymann J, Kirby J, Koppel P, Moore S, Phillips S, 
+Maffitt D, Pringle M, Tarbox L, Prior F. The Cancer Imaging Archive (TCIA): 
+Maintaining and Operating a Public Information Repository, Journal of Digital 
+Imaging, Volume 26, Number 6, December, 2013, pp 1045-1057. DOI: 
+10.1007/s10278-013-9622-7.
+
+
+**Annotation data** must be acknowledged as below:
+```
+"The annotation of the dataset was made possible through the joint work of Children's 
+National Hospital, NVIDIA and National Institutes of Health for the COVID-19-20 Lung 
+CT Lesion Segmentation Grand Challenge"
+```
+
+## Integrity
+The *checksum.md5* file contains the MD5 checksums of all the shared COVID-19-20
+files. The downloaded files can be checked against this list with the followinf 
+command in a terminal:
+```
+md5sum -c checksum.md5
+```
+
+## Licensing
+See *license.txt* for licensing information.
