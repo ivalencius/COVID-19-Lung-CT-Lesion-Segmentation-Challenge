@@ -39,6 +39,7 @@ from monai.transforms import (
     EnsureTyped,
 )
 
+from argparse import Namespace
 
 def get_xforms(mode="train", keys=("image", "label")):
     """returns a composed transform for train/val/infer."""
@@ -96,7 +97,7 @@ def get_inferer(_mode=None):
     """returns a sliding window inference instance."""
 
     patch_size = (192, 192, 16)
-    sw_batch_size, overlap = 2, 0.5
+    sw_batch_size, overlap = 1, 0.5
     inferer = monai.inferers.SlidingWindowInferer(
         roi_size=patch_size,
         sw_batch_size=sw_batch_size,
@@ -123,6 +124,7 @@ class DiceCELoss(nn.Module):
         return dice + cross_entropy
 
 
+
 def train(data_folder=".", model_folder="runs"):
     """run a training pipeline."""
 
@@ -130,7 +132,7 @@ def train(data_folder=".", model_folder="runs"):
     labels = sorted(glob.glob(os.path.join(data_folder, "*_seg.nii.gz")))
     logging.info(f"training: image/label ({len(images)}) folder: {data_folder}")
 
-    amp = True  # auto. mixed precision
+    amp = False  # auto. mixed precision
     keys = ("image", "label")
     train_frac, val_frac = 0.8, 0.2
     n_train = int(train_frac * len(images)) + 1
@@ -141,7 +143,7 @@ def train(data_folder=".", model_folder="runs"):
     val_files = [{keys[0]: img, keys[1]: seg} for img, seg in zip(images[-n_val:], labels[-n_val:])]
 
     # create a training data loader
-    batch_size = 2
+    batch_size = 1
     logging.info(f"batch size {batch_size}")
     train_transforms = get_xforms("train", keys)
     train_ds = monai.data.CacheDataset(data=train_files, transform=train_transforms)
@@ -295,6 +297,10 @@ if __name__ == "__main__":
     monai.config.print_config()
     monai.utils.set_determinism(seed=0)
     logging.basicConfig(stream=sys.stdout, level=logging.INFO)
+    # args = Namespace(
+    #     mode='train',
+    #     data_folder='C:\\Covid_lung_seg\\sample_data\\train\\',
+    #     model_folder = 'C:\\Covid_lung_seg\\sample_data\\models\\')
 
     if args.mode == "train":
         data_folder = args.data_folder or os.path.join("COVID-19-20_v2", "Train")
