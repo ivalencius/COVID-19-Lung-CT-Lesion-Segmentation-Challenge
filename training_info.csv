@@ -1,1 +1,2 @@
-Run_name,Model,Epochs,Batch_sz,Lr,Loss
+Run_name,Model,Epochs,Batch_sz,Lr,Momentum,Optimizer,Loss
+BasicUnet_1,BasicUnet,63,1,1.00E-04,0.95,adam,DiceCE
