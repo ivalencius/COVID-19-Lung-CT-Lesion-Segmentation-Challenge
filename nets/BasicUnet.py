@@ -1,5 +1,7 @@
 import monai
 import torch
+from torchsummary import summary
+from torchviz import make_dot
 
 def net(num_classes):
     net = monai.networks.nets.BasicUNet(
@@ -12,12 +14,11 @@ def net(num_classes):
     return net
 
 if __name__ == '__main__':
-    # Add later
-    '''
     device = 'cpu'
-    m = VGG16J(cut_layers=1, down_conv_z=False, up_conv_z2=True).to(device)
-    summary(m, (1, 192, 192, 32), device=device)
+    model = net(2)
+    summary(model, (1, 192, 192, 32), device=device)
     x = torch.rand((1, 1, 192, 192, 32), device=device)
-    out = m(x)
-    make_dot(out).render('vgg16j', view=True)
-    '''
+    out = model(x)
+    graph = make_dot(out)
+    graph.render('BasicUnet', view=True)
+    
