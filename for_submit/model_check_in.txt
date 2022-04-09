@@ -1,0 +1,78 @@
+Members: Ilan Valencius, Cole Gvozdas, William Gibbons.
+
+Github: https://github.com/ivalencius/COVID-19-Lung-CT-Lesion-Segmentation-Challenge
+
+Up until now we have had trouble installing and getting packages running for the 'baseline' code that MONAI provided for the segmentation challenge. We have since gotten the BasicUnet model up and running --> architecture outlined below or visualized here: https://github.com/ivalencius/COVID-19-Lung-CT-Lesion-Segmentation-Challenge/blob/main/nets/BasicUnet.pdf. We have trained it for 60 epochs and will run inference soon. Currently model training is capped at around 60 epochs because that is one night of training. I (Ilan) have been running the models on my laptop GPU so I am limited on time and space (can only accomodate a batch size of 1, not the recommended 2).
+
+Future models we plan on testing (also outlined in the proposal).
+nnUnet --> used by the top 6 performing models.
+Resnet --> used by the winner of the competition.
+We plan to try and find other submissions to this competition (such as https://github.com/skliff13/CompetitionsParticipation/tree/master/Covid19Segmentation2020), and try and build upon their work because we recognize we don't have the expertise or the time to develop a totally new architecture. As stated earlier, we just got BasicUnet up and running so we are still trying to determine what angle we would like to take --> do we try to optimize architectures, loss functions, optimizers, or all three.
+
+BasicUNet features: (32, 32, 64, 128, 256, 32).
+==========================================================================================
+Layer (type:depth-idx)                   Output Shape              Param #
+==========================================================================================
+├─TwoConv: 1-1                           [-1, 32, 192, 192, 32]    --
+|    └─Convolution: 2-1                  [-1, 32, 192, 192, 32]    --
+|    |    └─Conv3d: 3-1                  [-1, 32, 192, 192, 32]    896
+|    |    └─ADN: 3-2                     [-1, 32, 192, 192, 32]    64
+|    └─Convolution: 2-2                  [-1, 32, 192, 192, 32]    --
+|    |    └─Conv3d: 3-3                  [-1, 32, 192, 192, 32]    27,680
+|    |    └─ADN: 3-4                     [-1, 32, 192, 192, 32]    64
+├─Down: 1-2                              [-1, 32, 96, 96, 16]      --
+|    └─MaxPool3d: 2-3                    [-1, 32, 96, 96, 16]      --
+|    └─TwoConv: 2-4                      [-1, 32, 96, 96, 16]      --
+|    |    └─Convolution: 3-5             [-1, 32, 96, 96, 16]      27,744
+|    |    └─Convolution: 3-6             [-1, 32, 96, 96, 16]      27,744
+├─Down: 1-3                              [-1, 64, 48, 48, 8]       --
+|    └─MaxPool3d: 2-5                    [-1, 32, 48, 48, 8]       --
+|    └─TwoConv: 2-6                      [-1, 64, 48, 48, 8]       --
+|    |    └─Convolution: 3-7             [-1, 64, 48, 48, 8]       55,488
+|    |    └─Convolution: 3-8             [-1, 64, 48, 48, 8]       110,784
+├─Down: 1-4                              [-1, 128, 24, 24, 4]      --
+|    └─MaxPool3d: 2-7                    [-1, 64, 24, 24, 4]       --
+|    └─TwoConv: 2-8                      [-1, 128, 24, 24, 4]      --
+|    |    └─Convolution: 3-9             [-1, 128, 24, 24, 4]      221,568
+|    |    └─Convolution: 3-10            [-1, 128, 24, 24, 4]      442,752
+├─Down: 1-5                              [-1, 256, 12, 12, 2]      --
+|    └─MaxPool3d: 2-9                    [-1, 128, 12, 12, 2]      --
+|    └─TwoConv: 2-10                     [-1, 256, 12, 12, 2]      --
+|    |    └─Convolution: 3-11            [-1, 256, 12, 12, 2]      885,504
+|    |    └─Convolution: 3-12            [-1, 256, 12, 12, 2]      1,770,240
+├─UpCat: 1-6                             [-1, 128, 24, 24, 4]      --
+|    └─UpSample: 2-11                    [-1, 128, 24, 24, 4]      --
+|    |    └─ConvTranspose3d: 3-13        [-1, 128, 24, 24, 4]      262,272
+|    └─TwoConv: 2-12                     [-1, 128, 24, 24, 4]      --
+|    |    └─Convolution: 3-14            [-1, 128, 24, 24, 4]      885,120
+|    |    └─Convolution: 3-15            [-1, 128, 24, 24, 4]      442,752
+├─UpCat: 1-7                             [-1, 64, 48, 48, 8]       --
+|    └─UpSample: 2-13                    [-1, 64, 48, 48, 8]       --
+|    |    └─ConvTranspose3d: 3-16        [-1, 64, 48, 48, 8]       65,600
+|    └─TwoConv: 2-14                     [-1, 64, 48, 48, 8]       --
+|    |    └─Convolution: 3-17            [-1, 64, 48, 48, 8]       221,376
+|    |    └─Convolution: 3-18            [-1, 64, 48, 48, 8]       110,784
+├─UpCat: 1-8                             [-1, 32, 96, 96, 16]      --
+|    └─UpSample: 2-15                    [-1, 32, 96, 96, 16]      --
+|    |    └─ConvTranspose3d: 3-19        [-1, 32, 96, 96, 16]      16,416
+|    └─TwoConv: 2-16                     [-1, 32, 96, 96, 16]      --
+|    |    └─Convolution: 3-20            [-1, 32, 96, 96, 16]      55,392
+|    |    └─Convolution: 3-21            [-1, 32, 96, 96, 16]      27,744
+├─UpCat: 1-9                             [-1, 32, 192, 192, 32]    --
+|    └─UpSample: 2-17                    [-1, 32, 192, 192, 32]    --
+|    |    └─ConvTranspose3d: 3-22        [-1, 32, 192, 192, 32]    8,224
+|    └─TwoConv: 2-18                     [-1, 32, 192, 192, 32]    --
+|    |    └─Convolution: 3-23            [-1, 32, 192, 192, 32]    55,392
+|    |    └─Convolution: 3-24            [-1, 32, 192, 192, 32]    27,744
+├─Conv3d: 1-10                           [-1, 2, 192, 192, 32]     66
+==========================================================================================
+Total params: 5,749,410
+Trainable params: 5,749,410
+Non-trainable params: 0
+Total mult-adds (G): 180.37
+==========================================================================================
+Input size (MB): 4.50
+Forward/backward pass size (MB): 2271.38
+Params size (MB): 21.93
+Estimated Total Size (MB): 2297.81
+==========================================================================================
