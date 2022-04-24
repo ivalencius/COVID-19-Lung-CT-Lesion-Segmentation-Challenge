@@ -3,7 +3,7 @@ import torch
 from torchsummary import summary
 from torchviz import make_dot
 
-def net(num_classes):
+def BasicUnet(num_classes):
     net = monai.networks.nets.BasicUNet(
         spatial_dims=3,
         in_channels=1,
@@ -15,7 +15,7 @@ def net(num_classes):
 
 if __name__ == '__main__':
     device = 'cpu'
-    model = net(2)
+    model = BasicUnet(2)
     summary(model, (1, 192, 192, 32), device=device)
     x = torch.rand((1, 1, 192, 192, 32), device=device)
     out = model(x)
