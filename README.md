@@ -20,9 +20,11 @@ Challenge hosted on [grand-challenge.org](https://covid-segmentation.grand-chall
 
 During training, the top three models will be selected based on the per-epoch validation and stored at ```--model_folder```.
 
-Currently supported models:
-* ```"BasicUnet"```
-* ```"DynUnet"```
+Currently supported models (click for source):
+* [`BasicUnet`](https://www.nature.com/articles/s41592-018-0261-2)
+* [`DynUnet`](https://arxiv.org/abs/1904.08128)
+* [`HighResNet`](https://arxiv.org/abs/1707.01992)
+* [`VNet`](https://arxiv.org/pdf/1606.04797.pdf)
 
 ## Inference
 ```python run_net.py infer --data_folder "COVID-19-20_v2/Train" --model_folder "runs" --net_type "BasicUnet"```
