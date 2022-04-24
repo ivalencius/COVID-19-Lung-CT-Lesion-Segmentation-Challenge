@@ -4,22 +4,21 @@
 
 This directory contains a simple baseline method [using MONAI](https://monai.io) for training, validation, and inference for [COVID-19 LUNG CT LESION SEGMENTATION CHALLENGE - 2020](https://covid-segmentation.grand-challenge.org/COVID-19-20/) (a MICCAI Endorsed Event). The implementation is a basic deep learning pipeline which could serve as a starting point for further algorithmic improvements.
 
-<p>
-<img src="../../figures/Lung_2.png" width="28%" alt='lung-ct'>
-<img src="../../figures/image_101.png" width="37%" alt="lung">
-</p>
-
 ## Overview
 
-1. [Requirements](#requirements)
-1. [Dependencies and installation](#dependencies-and-installation)
-1. [Usages](#usages)
-    1. [Training](#training-and-validation-at-every-epoch)
-    1. [Inference](#inference)
-    1. [Results](#results)
-    1. [Further readings](#further-readings)
-1. [Submitting to the leaderboard](#submitting-to-the-leaderboard)
-1. [License](#license)
+- [A U-Net model for lung lesion segmentation from CT images](#a-u-net-model-for-lung-lesion-segmentation-from-ct-images)
+  - [Overview](#overview)
+  - [Requirements](#requirements)
+  - [Dependencies and installation](#dependencies-and-installation)
+    - [Pytorch](#pytorch)
+    - [MONAI](#monai)
+  - [Usages](#usages)
+    - [Training (and validation at every epoch)](#training-and-validation-at-every-epoch)
+    - [Inference](#inference)
+    - [Results](#results)
+    - [Further readings](#further-readings)
+  - [Submitting to the leaderboard](#submitting-to-the-leaderboard)
+  - [License](#license)
 
 ## Requirements
 
