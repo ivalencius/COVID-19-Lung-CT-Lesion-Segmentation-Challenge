@@ -26,7 +26,12 @@ Currently supported models (click for source):
 * [`HighResNet`](https://arxiv.org/abs/1707.01992)
 * [`VNet`](https://arxiv.org/pdf/1606.04797.pdf)
 
-## Inference
-```python run_net.py infer --data_folder "COVID-19-20_v2/Train" --model_folder "runs" --net_type "BasicUnet"```
+## Evaluation
+```python run_net.py evaluate --data_folder "COVID-19-20_v2/Validation" --model_folder "runs" --net_type "BasicUnet"``
 
-This command will load the best validation model, run inference, and store the predictions at ```./output```
+This command will evaluate the loss for every image in a folder and will store the image loss, mean loss, and standard deviation in `validation_loss.csv` inside the model folder.
+
+## Inference
+```python run_net.py infer --data_folder "COVID-19-20_v2/Validation" --model_folder "runs" --net_type "BasicUnet"```
+
+This command will load the best validation model, run inference, and store the predictions at ```./output```. Files will be stored according to the challenge specifications and can be uploaded for submission.
