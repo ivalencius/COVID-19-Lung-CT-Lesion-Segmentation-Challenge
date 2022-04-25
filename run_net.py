@@ -38,6 +38,12 @@ from monai.transforms import (
     SpatialPadd,
     EnsureTyped,
 )
+from ignite.engine import Engine
+from ignite.metrics import Accuracy
+
+from tqdm import tqdm
+
+import pandas as pd    
 
 from nets.BasicUnet import BasicUnet
 from nets.DynUnet import DynUnet
@@ -77,6 +83,8 @@ def get_xforms(mode="train", keys=("image", "label")):
     if mode == "val":
         dtype = (np.float32, np.uint8)
     if mode == "infer":
+        dtype = (np.float32,)
+    if mode == "eval":
         dtype = (np.float32,)
     xforms.extend([CastToTyped(keys, dtype=dtype), EnsureTyped(keys)])
     return monai.transforms.Compose(xforms)
@@ -280,6 +288,72 @@ def infer(data_folder=".", model_folder="runs", prediction_folder="output", net_
         shutil.copy(f, to_name)
     logging.info(f"predictions copied to {submission_dir}.")
 
+def evaluate(net_type, data_folder=".", model_folder="runs"):
+    """
+    run inference, the output folder will be "./output"
+    """
+    ckpts = sorted(glob.glob(os.path.join(model_folder, "*.pt")))
+    ckpt = ckpts[-1]
+    for x in ckpts:
+        logging.info(f"available model file: {x}.")
+    logging.info("----")
+    logging.info(f"using {ckpt}.")
+    
+    amp = False  # auto. mixed precision
+
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    net = get_net(net_type).to(device)
+    net.load_state_dict(torch.load(ckpt, map_location=device))
+    net.eval()
+
+    image_folder = os.path.abspath(data_folder)
+    images = sorted(glob.glob(os.path.join(image_folder, "*_ct.nii.gz")))
+    logging.info(f"infer: image ({len(images)}) folder: {data_folder}")
+    eval_files = [{"image": img} for img in images]
+
+    # Create evaluation dataloader
+    keys = ("image",)
+    eval_transforms = get_xforms("eval", keys)
+    eval_ds = monai.data.Dataset(data=eval_files,transform=eval_transforms)
+    eval_loader = monai.data.DataLoader(
+        eval_ds,
+        batch_size=1,  # image-level batch to the sliding window method, not the window-level batch
+        num_workers=2,
+        pin_memory=torch.cuda.is_available(),
+    )
+    inferer = get_inferer()
+    loss = DiceCELoss()
+    losses = []
+    with torch.no_grad():
+        print('Starting Evaluation')
+        for eval_data in tqdm(eval_loader):
+            y = eval_data[keys[0]].to(device)
+            preds = inferer(y, net)
+            n = 1.0
+            for _ in range(4):
+                # test time augmentations
+                _img = RandGaussianNoised(keys[0], prob=1.0, std=0.01)(eval_data)[keys[0]]
+                pred = inferer(_img.to(device), net)
+                preds = preds + pred
+                n = n + 1.0
+                for dims in [[2], [3]]:
+                    flip_pred = inferer(torch.flip(_img.to(device), dims=dims), net)
+                    pred = torch.flip(flip_pred, dims=dims)
+                    preds = preds + pred
+                    n = n + 1.0
+            preds = preds / n
+            preds = (preds.argmax(dim=1, keepdims=True)).float()
+            img_loss = loss.forward(pred, y).cpu().detach().numpy()
+            losses.append(img_loss)
+    #print(losses)
+    loss_dict = {
+        'Losses':losses,
+        'Mean Loss': np.mean(losses),
+        'Std': np.std(losses)
+    }
+    loss_df = pd.DataFrame(loss_dict)
+    loss_df.to_csv(os.path.join(model_folder,'validation_loss.csv'),index=False)
+
 
 if __name__ == "__main__":
     """
@@ -289,7 +363,7 @@ if __name__ == "__main__":
     """
     parser = argparse.ArgumentParser(description="Run a basic UNet segmentation baseline.")
     parser.add_argument(
-        "mode", metavar="mode", default="train", choices=("train", "infer"), type=str, help="mode of workflow"
+        "mode", metavar="mode", default="train", choices=("train", "infer", "evaluate"), type=str, help="mode of workflow"
     )
     parser.add_argument("--data_folder", default="", type=str, help="training data folder")
     parser.add_argument("--model_folder", default="runs", type=str, help="model folder")
@@ -309,6 +383,9 @@ if __name__ == "__main__":
         train(data_folder=data_folder, model_folder=args.model_folder, net_type=args.net_type)
     elif args.mode == "infer":
         data_folder = args.data_folder or os.path.join("COVID-19-20_v2", "Validation")
-        infer(data_folder=data_folder, model_folder=args.model_folder)
+        infer(data_folder=data_folder, model_folder=args.model_folder, net_type=args.net_type)
+    elif args.mode == "evaluate":
+        data_folder = args.data_folder or os.path.join("COVID-19-20_v2", "Validation", net_type=args.net_type)
+        evaluate(data_folder=data_folder, model_folder=args.model_folder, net_type=args.net_type)
     else:
         raise ValueError("Unknown mode.")
