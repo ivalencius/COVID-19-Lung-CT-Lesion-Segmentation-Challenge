@@ -20,14 +20,14 @@ Challenge hosted on [grand-challenge.org](https://covid-segmentation.grand-chall
 
 During training, the top three models will be selected based on the per-epoch validation and stored at ```--model_folder```.
 
-Currently supported models (click for source):
+Currently supported models:
 * [`BasicUnet`](https://www.nature.com/articles/s41592-018-0261-2)
 * [`DynUnet`](https://arxiv.org/abs/1904.08128)
 * [`HighResNet`](https://arxiv.org/abs/1707.01992)
 * [`VNet`](https://arxiv.org/pdf/1606.04797.pdf)
 
 ## Evaluation
-```python run_net.py evaluate --data_folder "COVID-19-20_v2/Validation" --model_folder "runs" --net_type "BasicUnet"``
+```python run_net.py evaluate --data_folder "COVID-19-20_v2/Validation" --model_folder "runs" --net_type "BasicUnet"```
 
 This command will evaluate the loss for every image in a folder and will store the image loss, mean loss, and standard deviation in `validation_loss.csv` inside the model folder.
 
