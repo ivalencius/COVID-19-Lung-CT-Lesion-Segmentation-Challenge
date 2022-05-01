@@ -47,6 +47,8 @@ import pandas as pd
 
 from nets.BasicUnet import BasicUnet
 from nets.DynUnet import DynUnet
+from nets.HighResNet import HighResNet
+from nets.VNet import VNet
 
 from argparse import Namespace
 
@@ -98,7 +100,10 @@ def get_net(net_type):
         net = BasicUnet(num_classes)
     if net_type == 'DynUnet':
         net = DynUnet(num_classes)
-        
+    if net_type == 'HighResNet':
+        net = HighResNet(num_classes)
+    if net_type == 'VNet':
+        net = VNet(num_classes)
     return net
 
 
@@ -177,9 +182,10 @@ def train(data_folder=".", model_folder="runs", net_type='BasicUnet'):
     # create BasicUNet, DiceLoss and Adam optimizer
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     net = get_net(net_type).to(device)
-    max_epochs, lr, momentum = 60, 1e-4, 0.95
+    max_epochs, lr, momentum = 60, 1e-2, 0.95
     logging.info(f"epochs {max_epochs}, lr {lr}, momentum {momentum}")
     opt = torch.optim.Adam(net.parameters(), lr=lr)
+    #opt = torch.optim.lr_scheduler.ReduceLROnPlateau(opt, mode='min', factor=0.1, patience=2, threshold=0.0001, threshold_mode='rel', cooldown=0, min_lr=0, eps=1e-08, verbose=True)
 
     # create evaluator (to be used to measure model quality during training
     val_post_transform = monai.transforms.Compose(

@@ -11,6 +11,7 @@ def HighResNet(num_classes):
         in_channels=1,
         out_channels=num_classes,
         dropout_prob=0.1,
+        acti_type=('leakyrelu', {'inplace': True}),
     )
     return net
 

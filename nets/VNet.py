@@ -6,11 +6,12 @@ from torchviz import make_dot
 
 
 def VNet(num_classes):
-    net = monai.networks.nets.HighResNet(
+    net = monai.networks.nets.VNet(
         spatial_dims=3,
         in_channels=1,
         out_channels=num_classes,
-        dropout_prob=0.1,
+        dropout_dim = 1,
+        dropout_prob=0.1
     )
     return net
 
