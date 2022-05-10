@@ -26,7 +26,7 @@ def HighResNet(num_classes):
         out_channels=num_classes,
         dropout_prob=0.1,
         acti_type=('leakyrelu', {'inplace': True}),
-        layer_params: Sequence[Dict] = DEFAULT_LAYER_PARAMS_3D,
+        layer_params= DEFAULT_LAYER_PARAMS_3D,
         
     )
     return net
