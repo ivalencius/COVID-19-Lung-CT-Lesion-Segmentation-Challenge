@@ -25,7 +25,7 @@ def HighResNet(num_classes):
         in_channels=1,
         out_channels=num_classes,
         dropout_prob=0.1,
-        acti_type=('leakyrelu', {'inplace': True}),
+        acti_type=('relu6', {'inplace': True}),
         layer_params= DEFAULT_LAYER_PARAMS_3D,
         
     )
