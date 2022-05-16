@@ -6,6 +6,8 @@ Challenge hosted on [grand-challenge.org](https://covid-segmentation.grand-chall
 * [Ilan Valencius](https://github.com/ivalencius)
 * [Cole Gvozdas](https://github.com/colegvozdas1)
 * William Gibbons
+## Contributions
+ - Cole Gvozdas: HighResNet.py parameter updatability (attempted changes in repeat items and the activation type, found no success, changed repeats back to original)
 
 ## Architecture
 * [[challenge_baseline]](https://github.com/ivalencius/COVID-19-Lung-CT-Lesion-Segmentation-Challenge/tree/main/challenge_baseline): Base segmentation model provided from [MONAI](https://github.com/Project-MONAI/tutorials/tree/master/3d_segmentation/challenge_baseline)
