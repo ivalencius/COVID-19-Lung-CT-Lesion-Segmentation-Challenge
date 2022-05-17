@@ -1,5 +1,5 @@
 Run_name,Model,Epochs,Batch_sz,Lr,Momentum,Optimizer,Loss,Notes
-BasicUnet_1,BasicUnet,63,1,1.00E-04,0.95,adam,DiceCE, _
+BasicUnet_1,BasicUnet,60,1,1.00E-04,0.95,adam,DiceCE, _
 DynUnet_1,DynUNet,60,1,1.00E-04,0.95,adam,DiceCE, bare
 DynUnet_2,DynUNet,60,1,1.00E-04,0.95,adam,DiceCE, res_block and trans_bias = True
 VNet_1,VNet,60,1,1.00E-04,0.95,adam,DiceCE, dropout_dim=1
