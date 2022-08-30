@@ -4,4 +4,8 @@ DynUnet_1,DynUNet,60,1,1.00E-04,0.95,adam,DiceCE, bare
 DynUnet_2,DynUNet,60,1,1.00E-04,0.95,adam,DiceCE, res_block and trans_bias = True
 VNet_1,VNet,60,1,1.00E-04,0.95,adam,DiceCE, dropout_dim=1
 DynUnet_3,DynUNet,60,1,1.00E-02,0.95,adam,DiceCE, new strides and kernels res_block=True patchsz 192x192x8
+<<<<<<< HEAD
 VNet_2,VNet,60,1,1.00E-02,0.95,adam,DiceCE, dropout_prob=0.5 dropout_dim=1 patchsz 192x192x16
+=======
+VNet_2,VNet,60,1,1.00E-02,0.95,adam,DiceCE, dropout_prob=0.5 dropout_dim=1 patchsz 192x192x16
+>>>>>>> ff6104684e76cec658240624ab67f2994e84ed59
