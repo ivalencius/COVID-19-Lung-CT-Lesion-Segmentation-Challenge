@@ -11,7 +11,7 @@ def VNet(num_classes):
         in_channels=1,
         out_channels=num_classes,
         dropout_dim = 1,
-        dropout_prob=0.1
+        dropout_prob=0.5
     )
     return net
 

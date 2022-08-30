@@ -14,7 +14,7 @@ def DynUnet(num_classes):
     In addition, the minimal spatial size should have at least one dimension that has twice the size of
     the product of all strides. For patch sizes that cannot find suitable strides, an error will be raised.
     """
-    sizes = [192, 192, 32]
+    sizes = [192,192,8]
     spacings = [0.79, 0.79, 4.8] # pixel resolution (?)
     input_size = sizes
     strides, kernels = [], []
@@ -40,20 +40,10 @@ def DynUnet(num_classes):
     strides.insert(0, len(spacings) * [1])
     kernels.append(len(spacings) * [3])
     
-    #print(strides)
-    #print(kernels)
-    #[[1, 1, 1], [2, 2, 2], [2, 2, 2], [2, 2, 2], [2, 2, 1]]
-    #[[3, 3, 3], [3, 3, 3], [3, 3, 3], [3, 3, 3], [3, 3, 3]]
+    # Kernels: [[3, 3, 1], [3, 3, 1], [3, 3, 3], [3, 3, 3], [3, 3, 3], [3, 3, 3]]
+    # Strides: [[1, 1, 1], [2, 2, 1], [2, 2, 1], [2, 2, 2], [2, 2, 2], [2, 2, 1]]
+    # Trainable Params: 61,098,818
     
-    # From https://arxiv.org/pdf/2110.03352.pdf
-    #The first and last kernel and stride values of the input sequences 
-    #are used for input block and bottleneck respectively, 
-    #and the rest value(s) are used for downsample and upsample blocks.
-    # Also see: https://arxiv.org/pdf/1904.08128.pdf
-    # below is from pg 35/55 of that paper
-    #kernels = [[3, 3, 3], [3, 3, 3], [3, 3, 3], [3, 3, 3], [3, 3, 3], [3, 3, 3]]
-    #strides = [[2,2,2], [2, 2, 2], [2, 2, 2], [2, 2, 2], [2, 2, 2], [2, 2, 1]]
-    #filters = [64, 96, 128, 192, 256, 384, 512][: len(strides)] # output channels for each block
     print('Kernels')
     print(kernels)
     print('Strides')
@@ -68,7 +58,7 @@ def DynUnet(num_classes):
         dropout=0.1,
         res_block=True,
         #deep_supervision=True, # alters output shape
-        trans_bias=False
+        #trans_bias=False
     )
     return net
 
